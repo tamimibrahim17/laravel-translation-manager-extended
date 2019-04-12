@@ -27,7 +27,7 @@ return [
      *
      * @type boolean
      */
-    'pagination_enabled' => true,
+    'pagination_enabled' => false,
 
 
     /**
@@ -35,7 +35,7 @@ return [
      *
      * @type integer
      */
-    'per_page' => 2,
+    'per_page' => 20,
 
     /**
      * Exclude specific groups from Laravel Translation Manager.

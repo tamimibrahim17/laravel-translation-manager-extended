@@ -33,11 +33,16 @@ class Controller extends BaseController
         $groups = [''=>'Choose a group'] + $groups;
         $numChanged = Translation::where('group', $group)->where('status', Translation::STATUS_CHANGED)->count();
 
+        $val = null;
         // Get order
         if(request()->has('order')) {
             $order = request('order');
         } else {
             $order = 'asc';
+        }
+
+        if(request()->get('order') == 'desc') {
+            $val = true;
         }
 
         $orderBy = request('orderBy') ?: '';
@@ -74,9 +79,9 @@ class Controller extends BaseController
         }
 
         if(request()->has('search')) {
-            $allTranslations = $searchContent;
+            $allTranslations = $searchContent->sortBy('key', SORT_NATURAL|SORT_FLAG_CASE, $val);
         } else {
-            $allTranslations = $allTranslations->get();
+            $allTranslations = $allTranslations->get()->sortBy('key', SORT_NATURAL|SORT_FLAG_CASE, $val);
         }
 
         foreach($allTranslations as $translation){
@@ -86,7 +91,7 @@ class Controller extends BaseController
         // Empty Dk only
         $emptyDk = [];
         foreach($translations as $key => $t) {
-            if(!array_key_exists('da', $t)) {
+            if(!array_key_exists('da', $t) || $t['da']->value == '') {
                 $emptyDk[$key] = $t;
             }
         }

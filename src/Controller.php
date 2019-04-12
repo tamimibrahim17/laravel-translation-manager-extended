@@ -205,10 +205,11 @@ class Controller extends BaseController
         }
     }
 
-    public function postApprove($group = null, $locale, $key)
+    public function postApprove($group = null)
     {
         if(!in_array($group, $this->manager->getConfig('exclude_groups'))) {   
-            $path = resource_path() . '/lang/' . $locale . '.json';
+            $path = resource_path() . '/lang/' . request('locale') . '.json';
+            $key = request('key');
             $data = [$key => request('content')];
             if(!file_exists($path)) {
                 file_put_contents($path, '{}');

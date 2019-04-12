@@ -81,7 +81,12 @@ class Controller extends BaseController
         if(request()->has('search')) {
             $allTranslations = $searchContent->sortBy('key', SORT_NATURAL|SORT_FLAG_CASE, $val);
         } else {
-            $allTranslations = $allTranslations->get()->sortBy('key', SORT_NATURAL|SORT_FLAG_CASE, $val);
+            if(request()->has('orderBy')) {
+                $allTranslations = $allTranslations->get();
+            } else {
+                $allTranslations = $allTranslations->get()->sortBy('key', SORT_NATURAL|SORT_FLAG_CASE, $val);
+            }
+           
         }
 
         foreach($allTranslations as $translation){

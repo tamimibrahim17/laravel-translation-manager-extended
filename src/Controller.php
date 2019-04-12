@@ -86,14 +86,14 @@ class Controller extends BaseController
         // Empty Dk only
         $emptyDk = [];
         foreach($translations as $key => $t) {
-            if(!array_key_exists('dk', $t)) {
+            if(!array_key_exists('da', $t)) {
                 $emptyDk[$key] = $t;
             }
         }
 
         if ($this->manager->getConfig('pagination_enabled') && !$verified) {
             $total = count($translations);
-            $page = request()->has('page') && !request()->has('dk') ? request()->get('page') : 1;
+            $page = request()->has('page') && !request()->has('da') ? request()->get('page') : 1;
             $per_page = $this->manager->getConfig('per_page');
             $offSet = ($page * $per_page) - $per_page;  
             $itemsForCurrentPage = array_slice($translations, $offSet, $per_page, true);
@@ -108,12 +108,12 @@ class Controller extends BaseController
         if ($this->manager->getConfig('pagination_enabled')) {
             if (!$verified) {
                 $totalEmptyDk = count($emptyDk);
-                $pageEmptyDk = request()->has('page') && request()->has('dk') ? request()->get('page') : 1;
+                $pageEmptyDk = request()->has('page') && request()->has('da') ? request()->get('page') : 1;
                 $per_pageDk = $this->manager->getConfig('per_page');
                 $offSetDk = ($pageEmptyDk * $per_pageDk) - $per_pageDk;  
                 $itemsForCurrentPageEmptyDk = array_slice($emptyDk, $offSetDk, $per_pageDk, true);
                 $prefix = $this->manager->getConfig('route')['prefix'];
-                $path = url("$prefix/view/$group?dk=empty");
+                $path = url("$prefix/view/$group?da=empty");
 
                 $paginatorDk = new LengthAwarePaginator($itemsForCurrentPageEmptyDk, $totalEmptyDk, $per_page, $pageEmptyDk);
                 $emptyDk = $paginatorDk->withPath($path);

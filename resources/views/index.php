@@ -239,13 +239,13 @@
         <div>
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" onclick="" class="<?php echo !request()->has('dk') ? 'active' : '' ?>"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">All</a></li>
-                <li role="presentation" class="<?php echo request()->has('dk') ? 'active' : '' ?>"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Empty Dk</a></li>
+                <li role="presentation" onclick="" class="<?php echo !request()->has('da') ? 'active' : '' ?>"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">All</a></li>
+                <li role="presentation" class="<?php echo request()->has('da') ? 'active' : '' ?>"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Empty Da</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content" style="margin-top: 12px;">
-                <div role="tabpanel" class="tab-pane <?php echo !request()->has('dk') ? 'active' : '' ?>" id="home">
+                <div role="tabpanel" class="tab-pane <?php echo !request()->has('da') ? 'active' : '' ?>" id="home">
                     <table class="table">
                         <thead>
                         <tr>
@@ -309,7 +309,7 @@
                     </table>
                     <?php if ($paginationEnabled) echo $translations->links()->toHtml(); ?>
                 </div>
-                <div role="tabpanel" class="tab-pane <?php echo request()->has('dk') ? 'active' : '' ?>" id="profile">
+                <div role="tabpanel" class="tab-pane <?php echo request()->has('da') ? 'active' : '' ?>" id="profile">
                     <table class="table">
                         <thead>
                         <tr>

@@ -108,7 +108,7 @@ class Controller extends BaseController
 
         if ($this->manager->getConfig('pagination_enabled') && !$verified) {
             $total = count($translations);
-            $page = request()->has('page') && !request()->has('da') ? request()->get('page') : 1;
+            $page = request()->has('page') && empty(request()->all()) ? request()->get('page') : 1;
             $per_page = $this->manager->getConfig('per_page');
             $offSet = ($page * $per_page) - $per_page;  
             $itemsForCurrentPage = array_slice($translations, $offSet, $per_page, true);
@@ -129,10 +129,10 @@ class Controller extends BaseController
                     ${'offSet'.$locale} = (${'pageEmpty'.$locale} * $per_page) - $per_page;  
                     ${'itemsForCurrentPageEmpty'.$locale} = array_slice($empty[$locale], ${'offSet'.$locale}, $per_page, true);
                     $prefix = $this->manager->getConfig('route')['prefix'];
-                    $path = url("$prefix/view/$group?$locale=empty");
+                    ${'path'.$locale} = url("$prefix/view/$group?$locale=empty");
 
                     ${'paginator'.$locale} = new LengthAwarePaginator(${'itemsForCurrentPageEmpty'.$locale}, ${'totalEmpty'.$locale}, $per_page, ${'pageEmpty'.$locale});
-                    $empty[$locale] = ${'paginator'.$locale}->withPath($path);
+                    $empty[$locale] = ${'paginator'.$locale}->withPath(${'path'.$locale});
                 }
             }
         }

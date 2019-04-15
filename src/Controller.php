@@ -108,7 +108,7 @@ class Controller extends BaseController
 
         if ($this->manager->getConfig('pagination_enabled') && !$verified) {
             $total = count($translations);
-            $page = request()->has('page') && empty(request()->all()) ? request()->get('page') : 1;
+            $page = (request()->has('page') && empty(request()->all())) || request()->has('all') ? request()->get('page') : 1;
             $per_page = $this->manager->getConfig('per_page');
             $offSet = ($page * $per_page) - $per_page;  
             $itemsForCurrentPage = array_slice($translations, $offSet, $per_page, true);

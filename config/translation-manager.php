@@ -27,7 +27,7 @@ return [
      *
      * @type boolean
      */
-    'pagination_enabled' => false,
+    'pagination_enabled' => true,
 
 
     /**

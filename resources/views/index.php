@@ -239,7 +239,7 @@
         <div>
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="<?php echo request()->has('all') || request()->has('order') || request()->has('orderBy') || empty(request()->all())  ? 'active' : '' ?>"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">All</a></li>
+                <li role="presentation" class="<?php echo request()->has('search') || request()->has('all') || request()->has('order') || request()->has('orderBy') || empty(request()->all())  ? 'active' : '' ?>"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">All</a></li>
                 <?php foreach($locales as $locale): ?>
                 <li role="presentation" class="<?php echo request()->has($locale) ? 'active' : '' ?>"><a href="#<?php echo $locale; ?>" aria-controls="<?php echo $locale; ?>" role="tab" data-toggle="tab">Empty <?php echo ucfirst($locale); ?></a></li>
                 <?php endforeach ?>
@@ -247,7 +247,7 @@
 
             <!-- Tab panes -->
             <div class="tab-content" style="margin-top: 12px;">
-                <div role="tabpanel" class="tab-pane <?php echo request()->has('all') || request()->has('order') || request()->has('orderBy') || empty(request()->all())  ? 'active' : '' ?>" id="home">
+                <div role="tabpanel" class="tab-pane <?php echo request()->has('search') || request()->has('all') || request()->has('order') || request()->has('orderBy') || empty(request()->all())  ? 'active' : '' ?>" id="home">
                     <table class="table">
                         <thead>
                         <tr>

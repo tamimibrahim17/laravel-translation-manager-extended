@@ -67,7 +67,7 @@ class Controller extends BaseController
             $keys = Translation::where('group', $group)->orderBy('key', 'asc')
                            ->where('key', 'LIKE', "%{$searchTerm}%") 
                            ->orWhere('value', 'LIKE', "%{$searchTerm}%")
-                           ->get('key');
+                           ->get(['key']);
            
             foreach ($keys as $key) {
                 foreach ($allTranslations->get() as $translation) {
@@ -93,7 +93,6 @@ class Controller extends BaseController
             $translations[$translation->key][$translation->locale] = $translation;
         }
 
-        
         foreach($locales as $locale) {
             $empty[$locale] = [];
 
@@ -103,8 +102,6 @@ class Controller extends BaseController
                 }
             }
         }
-
-        
 
         if ($this->manager->getConfig('pagination_enabled') && !$verified) {
             $total = count($translations);

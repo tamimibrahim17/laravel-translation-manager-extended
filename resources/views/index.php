@@ -240,6 +240,7 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="<?php echo request()->has('search') || request()->has('all') || request()->has('order') || request()->has('orderBy') || empty(request()->all())  ? 'active' : '' ?>"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">All</a></li>
+                <li role="presentation" class="<?php echo request()->has('status') ? 'active' : '' ?>"><a href="#approve" aria-controls="approve" role="tab" data-toggle="tab">Approve</a></li>
                 <?php foreach($locales as $locale): ?>
                 <li role="presentation" class="<?php echo request()->has($locale) ? 'active' : '' ?>"><a href="#<?php echo $locale; ?>" aria-controls="<?php echo $locale; ?>" role="tab" data-toggle="tab">Empty <?php echo ucfirst($locale); ?></a></li>
                 <?php endforeach ?>
@@ -310,6 +311,65 @@
                         </tbody>
                     </table>
                     <?php if($paginationEnabled) echo $translations->links()->toHtml(); ?>
+                </div>
+
+                <div role="tabpanel" class="tab-pane <?php echo request()->has('status') ? 'active' : '' ?>" id="approve">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th width="15%">Key</th>
+                            <?php foreach ($locales as $locale): ?>
+                                <th><?= $locale ?></th>
+                            <?php endforeach; ?>
+                            <?php if ($deleteEnabled): ?>
+                                <th>&nbsp;</th>
+                            <?php endif; ?>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <?php foreach ($unapproved as $key => $translation): ?>
+                            <tr id="<?php echo htmlentities($key, ENT_QUOTES, 'UTF-8', false) ?>">
+                                <td><?php echo htmlentities($key, ENT_QUOTES, 'UTF-8', false) ?></td>
+                                <?php foreach ($locales as $locale): ?>
+                                    <?php $t = isset($translation[$locale]) ? $translation[$locale] : null ?>
+
+                                    <td>
+                                        <div style="display: flex;">
+                                            <a href="#edit" style="margin-right: 6px;" class="editable status-<?php echo $t ? $t->status : 0 ?> locale-<?php echo $locale ?>"
+                                        data-locale="<?php echo $locale ?>" data-name="<?php echo $locale . "|" . htmlentities($key, ENT_QUOTES, 'UTF-8', false) ?>"
+                                        id="username" data-type="textarea" data-pk="<?php echo $t ? $t->id : 0 ?>"
+                                        data-url="<?php echo $editUrl ?>"
+                                        data-title="Enter translation"><?php echo $t ? htmlentities($t->value, ENT_QUOTES, 'UTF-8', false) : '' ?></a>
+
+                                        <?php if ($t && $t->status == 1): ?>
+                                                <form action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postApprove', [$group, $locale, $key,]) ?>" method="POST" role="form">
+                                                    <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+                                                    <input type="hidden" name="previous" value="<?php echo url()->full(); ?>">
+                                                    <input type="hidden" name="content" value="<?php echo $t->value; ?>">
+                                                    <input type="hidden" name="id" value="<?php echo $t->id; ?>">
+                                                    <span class="form-group">
+                                                        <button type="submit" class="btn btn-xs btn-success"><span
+                                                        class="glyphicon glyphicon-ok"></span></button>
+                                                    </span>
+                                                </form>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                <?php endforeach; ?>
+                                <?php if ($deleteEnabled): ?>
+                                    <td>
+                                        <a href="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postDelete', [$group, $key]) ?>"
+                                        class="delete-key"
+                                        data-confirm="Are you sure you want to delete the translations for '<?php echo htmlentities($key, ENT_QUOTES, 'UTF-8', false) ?>?"><span
+                                                    class="glyphicon glyphicon-trash"></span></a>
+                                    </td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <?php if($paginationEnabled) echo $unapproved->links()->toHtml(); ?>
                 </div>
 
                 <?php foreach($emptyLocales as $keylocale => $emTranslations):  ?>

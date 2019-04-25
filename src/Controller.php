@@ -103,7 +103,18 @@ class Controller extends BaseController
             }
         }
 
+        $unapproved = [];
+        foreach ($translations as $key => $translation) {
+            foreach ($translation as $value) {
+                if ($value['status'] == 1) {
+                    $unapproved[$key] = $translation;
+                    break; 
+                }
+            }
+        }
+
         if ($this->manager->getConfig('pagination_enabled') && !$verified) {
+            // For all translations
             $total = count($translations);
             $page = (request()->has('page') && empty(request()->all())) || request()->has('all') ? request()->get('page') : 1;
             $per_page = $this->manager->getConfig('per_page');
@@ -115,22 +126,30 @@ class Controller extends BaseController
             $paginator = new LengthAwarePaginator($itemsForCurrentPage, $total, $per_page, $page);
             $translations = $paginator->withPath($path);
 
-        }
+            // For unapproved translations
+            $totalUnapproved = count($unapproved);
+            $pageUnapproved = request()->has('page') && request()->has('status') ? request()->get('page') : 1;
+            $per_page = $this->manager->getConfig('per_page');
+            $offSetUnapproved = ($pageUnapproved * $per_page) - $per_page;  
+            $itemsForCurrentPageUnapproved = array_slice($unapproved, $offSetUnapproved, $per_page, true);
+            $prefix = $this->manager->getConfig('route')['prefix'];
+            $pathUnapproved = url("$prefix/view/$group?status=unapproved");
 
-        if ($this->manager->getConfig('pagination_enabled')) {
-            if (!$verified) {
-                foreach($locales as $locale) {
-                    ${'totalEmpty'.$locale} = count($empty[$locale]);
-                    ${'pageEmpty'.$locale} = request()->has('page') && request()->has($locale) ? request()->get('page') : 1;
-                    $per_page = $this->manager->getConfig('per_page');
-                    ${'offSet'.$locale} = (${'pageEmpty'.$locale} * $per_page) - $per_page;  
-                    ${'itemsForCurrentPageEmpty'.$locale} = array_slice($empty[$locale], ${'offSet'.$locale}, $per_page, true);
-                    $prefix = $this->manager->getConfig('route')['prefix'];
-                    ${'path'.$locale} = url("$prefix/view/$group?$locale=empty");
+            $paginatorUnapproved = new LengthAwarePaginator($itemsForCurrentPageUnapproved, $totalUnapproved, $per_page, $pageUnapproved);
+            $unapproved = $paginatorUnapproved->withPath($pathUnapproved);
 
-                    ${'paginator'.$locale} = new LengthAwarePaginator(${'itemsForCurrentPageEmpty'.$locale}, ${'totalEmpty'.$locale}, $per_page, ${'pageEmpty'.$locale});
-                    $empty[$locale] = ${'paginator'.$locale}->withPath(${'path'.$locale});
-                }
+            // For Empty local
+            foreach($locales as $locale) {
+                ${'totalEmpty'.$locale} = count($empty[$locale]);
+                ${'pageEmpty'.$locale} = request()->has('page') && request()->has($locale) ? request()->get('page') : 1;
+                $per_page = $this->manager->getConfig('per_page');
+                ${'offSet'.$locale} = (${'pageEmpty'.$locale} * $per_page) - $per_page;  
+                ${'itemsForCurrentPageEmpty'.$locale} = array_slice($empty[$locale], ${'offSet'.$locale}, $per_page, true);
+                $prefix = $this->manager->getConfig('route')['prefix'];
+                ${'path'.$locale} = url("$prefix/view/$group?$locale=empty");
+
+                ${'paginator'.$locale} = new LengthAwarePaginator(${'itemsForCurrentPageEmpty'.$locale}, ${'totalEmpty'.$locale}, $per_page, ${'pageEmpty'.$locale});
+                $empty[$locale] = ${'paginator'.$locale}->withPath(${'path'.$locale});
             }
         }
 
@@ -146,7 +165,8 @@ class Controller extends BaseController
             ->with('paginationEnabled', $this->manager->getConfig('pagination_enabled') && !$verified && ! request()->has('search'))
             ->with('order', $order)
             ->with('orderBy', $orderBy)
-            ->with('emptyLocales', $empty);
+            ->with('emptyLocales', $empty)
+            ->with('unapproved', $unapproved);
     }
 
     public function getView($group = null)

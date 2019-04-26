@@ -283,6 +283,33 @@
                                         data-url="<?php echo $editUrl ?>"
                                         data-title="Enter translation"><?php echo $t ? htmlentities($t->value, ENT_QUOTES, 'UTF-8', false) : '' ?></a>
 
+                                        <div>
+                                            <button style="margin-right:3px;" type="button" class="btn btn-xs btn-info" data-toggle="modal" data-target="#myModal<?php echo $t ? $t->id : 0 ?>"><span class="glyphicon glyphicon-asterisk"></span></button>
+                                        </div>
+                                        
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="myModal<?php echo $t ? $t->id : 0 ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="myModalLabel">Previous Log</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <?php if(is_null($t['meta'])): ?>
+                                                        No Previous log found!
+                                                    <?php else: ?>
+                                                        
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <?php if ($t && $t->status == 1): ?>
                                                 <form action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postApprove', [$group]) ?>" method="POST" role="form">
                                                     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">

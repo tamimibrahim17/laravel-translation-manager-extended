@@ -14,7 +14,7 @@ class AddMetaToTranslationsTable extends Migration
     public function up()
     {
         Schema::table('ltm_translations', function (Blueprint $table) {
-            $table->json('meta')->nullable();
+            $table->longText('meta')->nullable();
         });
     }
 

@@ -300,7 +300,11 @@
                                                     <?php if(is_null($t['meta'])): ?>
                                                         No Previous log found!
                                                     <?php else: ?>
-                                                        
+                                                    <ul>
+                                                        <?php foreach($t['meta'] as $meta) : ?>                                                            
+                                                            <li><h4><?php echo $meta['value']; ?> ---- <small><?php echo $meta['date']; ?></small></h4></li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
                                                     <?php endif; ?>
                                                 </div>
                                                 <div class="modal-footer">

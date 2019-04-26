@@ -247,8 +247,29 @@ class Controller extends BaseController
             }
            
             $output = json_encode( $translations, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE );
-            
+
             $this->manager->files()->put( $path, $output );
+
+            $content = [
+                'value' => request('content'),
+                'date' => now()->format('Y-m-d H:i')
+            ];
+
+            if(is_null(Translation::where('group', $group)->where('id', request('id'))->first()->meta)) {
+                Translation::where('group', $group)->where('id', request('id'))->update([ 'meta' => json_encode([$content]) ]);
+            } else {
+                $data = Translation::where('group', $group)->where('id', request('id'))->first()->meta;
+
+                if(count($data) >= 5) {
+                    array_pop($data);
+                    array_unshift($data, $content);
+                    Translation::where('group', $group)->where('id', request('id'))->update([ 'meta' => json_encode($data) ]);
+                } else {
+                    array_unshift($data, $content);
+                    Translation::where('group', $group)->where('id', request('id'))->update([ 'meta' => json_encode($data) ]);
+                }
+            }
+
             Translation::where('group', $group)->where('id', request('id'))->update([ 'status' => Translation::STATUS_SAVED ]);
         }
 

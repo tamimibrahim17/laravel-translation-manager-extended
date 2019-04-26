@@ -287,10 +287,10 @@
                                                 <form action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postApprove', [$group]) ?>" method="POST" role="form">
                                                     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
                                                     <input type="hidden" name="previous" value="<?php echo url()->full(); ?>">
-                                                    <input type="hidden" name="content" value="<?php echo $t->value; ?>">
+                                                    <input type="hidden" name="content" value="<?php echo htmlentities($t->value, ENT_QUOTES, 'UTF-8', false) ?>">
                                                     <input type="hidden" name="id" value="<?php echo $t->id; ?>">
                                                     <input type="hidden" name="locale" value="<?php echo $locale; ?>">
-                                                    <input type="hidden" name="key" value="<?php echo $key; ?>">
+                                                    <input type="hidden" name="key" value='<?php echo htmlentities($key, ENT_QUOTES, 'UTF-8', false) ?>'>
                                                     <span class="form-group">
                                                         <button type="submit" class="btn btn-xs btn-success"><span
                                                         class="glyphicon glyphicon-ok"></span></button>

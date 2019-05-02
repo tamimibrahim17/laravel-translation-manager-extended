@@ -196,11 +196,12 @@ class Manager
                 // Get all matches
                 foreach ( $matches[ 2 ] as $key ) {
                     $groupKeys[] = $key;
+                    list( $group, $item ) = explode( '.', $key, 2 );
                     if(array_key_exists($key, $groupFilePath)) {
-                        array_push($groupFilePath[$key], $file->getPathname());
-                        $groupFilePath[$key] = array_unique($stringFilePath[$key]);
+                        array_push($groupFilePath[$item], $file->getPathname());
+                        $groupFilePath[$item] = array_unique($stringFilePath[$item]);
                     } else {
-                        $groupFilePath[$key] = [
+                        $groupFilePath[$item] = [
                             $file->getPathname()
                         ];
                     } 

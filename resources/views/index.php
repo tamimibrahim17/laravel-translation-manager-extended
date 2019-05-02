@@ -284,9 +284,38 @@
                         </thead>
                         <tbody>
 
-                        <?php foreach ($translations as $key => $translation): ?>
+                        <?php $i = 1; foreach ($translations as $key => $translation): ?>
                             <tr id="<?php echo htmlentities($key, ENT_QUOTES, 'UTF-8', false) ?>">
-                                <td><?php echo htmlentities($key, ENT_QUOTES, 'UTF-8', false) ?></td>
+                                <td>
+                                    <?php echo htmlentities($key, ENT_QUOTES, 'UTF-8', false) ?>
+                                    <span><button style="margin-right:3px;" type="button" class="btn btn-xs btn-info" data-toggle="modal" data-target="#myModalPath<?php echo $i; ?>"><span class="glyphicon glyphicon-asterisk"></span></button></span>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="myModalPath<?php echo $i; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">File path</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <?php $tra = \ShuvroRoy\TranslationManager\Models\Translation::where('locale', config('app.locale'))->where('key', $key)->first(); ?>
+                                                <?php if(is_null(json_decode($tra['filepath']))): ?>
+                                                    No file path found!
+                                                <?php else: ?>
+                                                <ul>
+                                                    <?php foreach(json_decode($tra['filepath']) as $path) : ?>                                          
+                                                        <li><h4><?php echo $path; ?></h4></li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
                                 <?php foreach ($locales as $locale): ?>
                                     <?php $t = isset($translation[$locale]) ? $translation[$locale] : null ?>
 

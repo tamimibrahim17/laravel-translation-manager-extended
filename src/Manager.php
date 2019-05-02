@@ -186,6 +186,9 @@ class Manager
         $finder = new Finder();
         $finder->in( $path )->exclude( 'storage' )->exclude( 'vendor' )->name( '*.php' )->name( '*.twig' )->name( '*.vue' )->files();
 
+        $groupFilePath = [];
+        $stringFilePath = [];
+
         /** @var \Symfony\Component\Finder\SplFileInfo $file */
         foreach ( $finder as $file ) {
             // Search the current file for the pattern
@@ -193,6 +196,14 @@ class Manager
                 // Get all matches
                 foreach ( $matches[ 2 ] as $key ) {
                     $groupKeys[] = $key;
+                    if(array_key_exists($key, $groupFilePath)) {
+                        array_push($groupFilePath[$key], $file->getPathname());
+                        $groupFilePath[$key] = array_unique($stringFilePath[$key]);
+                    } else {
+                        $groupFilePath[$key] = [
+                            $file->getPathname()
+                        ];
+                    } 
                 }
             }
 
@@ -210,10 +221,20 @@ class Manager
                     if ( !( str_contains( $key, '::' ) && str_contains( $key, '.' ) )
                          || str_contains( $key, ' ' ) ) {
                         $stringKeys[] = $key;
+                        if(array_key_exists($key, $stringFilePath)) {
+                            array_push($stringFilePath[$key], $file->getPathname());
+                            $stringFilePath[$key] = array_unique($stringFilePath[$key]);
+                        } else {
+                            $stringFilePath[$key] = [
+                                $file->getPathname()
+                            ];
+                        }
+                         
                     }
                 }
             }
         }
+
         // Remove duplicates
         $groupKeys  = array_unique( $groupKeys );
         $stringKeys = array_unique( $stringKeys );
@@ -223,12 +244,18 @@ class Manager
             // Split the group and item
             list( $group, $item ) = explode( '.', $key, 2 );
             $this->missingKey( '', $group, $item );
+            Translation::where('locale', $this->app[ 'config' ][ 'app.locale' ])->where('group', $group)->where('key', $item)->update([
+                'filepath' => json_encode($groupFilePath[$item])
+            ]);
         }
 
         foreach ( $stringKeys as $key ) {
             $group = self::JSON_GROUP;
             $item  = $key;
             $this->missingKey( '', $group, $item );
+            Translation::where('locale', $this->app[ 'config' ][ 'app.locale' ])->where('group', $group)->where('key', $item)->update([
+                'filepath' => json_encode($stringFilePath[$item])
+            ]);
         }
 
         // Return the number of found translations

@@ -27,7 +27,7 @@
                     settings.data += "&_token=<?php echo csrf_token() ?>";
                 }
             });
-
+            <?php if($modifyEnabled): ?>
             $('.editable').editable().on('hidden', function(e, reason){
                 var locale = $(this).data('locale');
                 if(reason === 'save'){
@@ -35,6 +35,7 @@
                     location.reload();
                 }
             });
+            <?php endif; ?>
 
             $('.group-select').on('change', function(){
                 var group = $(this).val();
@@ -107,6 +108,7 @@
     </div>
 </header>
 <div class="container-fluid">
+    <?php if($modifyEnabled) : ?>
     <p>Warning, translations are not visible until they are exported back to the app/lang file, using <code>php artisan translation:export</code> command or publish button.</p>
     <div class="alert alert-success success-import" style="display:none;">
         <p>Done importing, processed <strong class="counter">N</strong> items! Reload this page to refresh the groups!</p>
@@ -158,6 +160,7 @@
             </form>
         <?php endif; ?>
     </p>
+    <?php endif; ?>
     <form role="form" method="POST" action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postAddGroup') ?>">
         <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
         <div class="form-group">
@@ -168,6 +171,7 @@
                 <?php endforeach; ?>
             </select>
         </div>
+        <?php if($modifyEnabled) : ?>
         <div class="form-group">
             <label>Enter a new group name and start edit translations in that group</label>
             <input type="text" class="form-control" name="new-group" />
@@ -175,8 +179,10 @@
         <div class="form-group">
             <input type="submit" class="btn btn-default" name="add-group" value="Add and edit keys" />
         </div>
+        <?php endif; ?>
     </form>
     <?php if($group): ?>
+        <?php if($modifyEnabled) : ?>
         <form action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postAdd', array($group)) ?>" method="POST"  role="form">
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="form-group">
@@ -192,6 +198,7 @@
                 <span class="btn btn-default enable-auto-translate-group">Use Auto Translate</span>
             </div>
         </div>
+        <?php endif; ?>
         <form class="form-add-locale autotranslate-block-group hidden" method="POST" role="form" action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postTranslateMissing') ?>">
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="row">
@@ -236,14 +243,22 @@
 
         </div>
 
+        <?php if(!$modifyEnabled) : ?>
+        <div>
+            <div class="alert alert-danger" role="alert">Translations may only be updated on test server.<a href="https://test.drivi.dk/public/translations">Link</a></div>
+        </div>
+        <?php endif; ?>
+
         <div>
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="<?php echo request()->has('search') || request()->has('all') || request()->has('order') || request()->has('orderBy') || empty(request()->all())  ? 'active' : '' ?>"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">All</a></li>
+                <?php if($modifyEnabled) : ?>
                 <li role="presentation" class="<?php echo request()->has('status') ? 'active' : '' ?>"><a href="#approve" aria-controls="approve" role="tab" data-toggle="tab">Not approved</a></li>
                 <?php foreach($locales as $locale): ?>
                 <li role="presentation" class="<?php echo request()->has($locale) ? 'active' : '' ?>"><a href="#<?php echo $locale; ?>" aria-controls="<?php echo $locale; ?>" role="tab" data-toggle="tab">Empty <?php echo ucfirst($locale); ?></a></li>
                 <?php endforeach ?>
+                <?php endif; ?>
             </ul>
 
             <!-- Tab panes -->
@@ -262,7 +277,7 @@
                                     <input type="hidden" name="orderBy" id="orderBy">
                                 </form>
                             <?php endforeach; ?>
-                            <?php if ($deleteEnabled): ?>
+                            <?php if ($deleteEnabled && $modifyEnabled): ?>
                                 <th>&nbsp;</th>
                             <?php endif; ?>
                         </tr>
@@ -314,7 +329,7 @@
                                             </div>
                                         </div>
 
-                                        <?php if ($t && $t->status == 1): ?>
+                                        <?php if ($t && $t->status == 1 && $modifyEnabled): ?>
                                                 <form action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postApprove', [$group]) ?>" method="POST" role="form">
                                                     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
                                                     <input type="hidden" name="previous" value="<?php echo url()->full(); ?>">
@@ -331,7 +346,7 @@
                                         </div>
                                     </td>
                                 <?php endforeach; ?>
-                                <?php if ($deleteEnabled): ?>
+                                <?php if ($deleteEnabled && $modifyEnabled): ?>
                                     <td>
                                         <a href="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postDelete', [$group, $key]) ?>"
                                         class="delete-key"
@@ -345,7 +360,7 @@
                     </table>
                     <?php if($paginationEnabled) echo $translations->links()->toHtml(); ?>
                 </div>
-
+                <?php if($modifyEnabled) : ?>
                 <div role="tabpanel" class="tab-pane <?php echo request()->has('status') ? 'active' : '' ?>" id="approve">
                     <table class="table">
                         <thead>
@@ -354,7 +369,7 @@
                             <?php foreach ($locales as $locale): ?>
                                 <th><?= $locale ?></th>
                             <?php endforeach; ?>
-                            <?php if ($deleteEnabled): ?>
+                            <?php if ($deleteEnabled && $modifyEnabled): ?>
                                 <th>&nbsp;</th>
                             <?php endif; ?>
                         </tr>
@@ -390,7 +405,7 @@
                                         </div>
                                     </td>
                                 <?php endforeach; ?>
-                                <?php if ($deleteEnabled): ?>
+                                <?php if ($deleteEnabled && $modifyEnabled): ?>
                                     <td>
                                         <a href="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postDelete', [$group, $key]) ?>"
                                         class="delete-key"
@@ -418,7 +433,7 @@
                             <?php endif; ?>
                                 
                             <?php endforeach; ?>
-                            <?php if ($deleteEnabled): ?>
+                            <?php if ($deleteEnabled && $modifyEnabled): ?>
                                 <th>&nbsp;</th>
                             <?php endif; ?>
                         </tr>
@@ -439,7 +454,7 @@
                                         data-title="Enter translation"><?php echo $t ? htmlentities($t->value, ENT_QUOTES, 'UTF-8', false) : '' ?></a>
                                         </div>
                                     </td>
-                                <?php if ($deleteEnabled): ?>
+                                <?php if ($deleteEnabled && $modifyEnabled): ?>
                                     <td>
                                         <a href="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postDelete', [$group, $key]) ?>"
                                         class="delete-key"
@@ -454,6 +469,7 @@
                     <?php if($paginationEnabled) echo $emTranslations->links()->toHtml(); ?>
                 </div>
                 <?php endforeach ?>
+                <?php endif; ?>
             </div>
         </div>
         
@@ -479,6 +495,7 @@
                 <?php endforeach; ?>
                 </ul>
             </form>
+            <?php if($modifyEnabled) : ?>
             <form class="form-add-locale" method="POST" role="form" action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postAddLocale') ?>">
                 <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
                 <div class="form-group">
@@ -495,7 +512,9 @@
                     </div>
                 </div>
             </form>
+            <?php endif; ?>
         </fieldset>
+        <?php if($modifyEnabled) : ?>
         <fieldset>
             <legend>Export all translations</legend>
             <form class="form-inline form-publish-all" method="POST" action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postPublish', '*') ?>" data-remote="true" role="form" data-confirm="Are you sure you want to publish all translations group? This will overwrite existing language files.">
@@ -503,6 +522,7 @@
                 <button type="submit" class="btn btn-primary" data-disable-with="Publishing.." >Publish all</button>
             </form>
         </fieldset>
+        <?php endif; ?>
 
     <?php endif; ?>
 </div>

@@ -38,6 +38,13 @@ return [
     'per_page' => 20,
 
     /**
+     * Define application enviroment (test, dev ,prod)
+     *
+     * @type string
+     */
+    'app_env' => 'test',
+
+    /**
      * Exclude specific groups from Laravel Translation Manager.
      * This is useful if, for example, you want to avoid editing the official Laravel language files.
      *

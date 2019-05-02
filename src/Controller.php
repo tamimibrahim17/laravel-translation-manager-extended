@@ -153,6 +153,13 @@ class Controller extends BaseController
             }
         }
 
+        // For Modify Enabled
+        $modifyEnabled = false;
+
+        if($this->manager->getConfig('app_env') === 'test') {
+            $modifyEnabled = true;
+        }
+
         return view('translation-manager::index')
             ->with('translations', $translations)
             ->with('locales', $locales)
@@ -162,6 +169,7 @@ class Controller extends BaseController
             ->with('numChanged', $numChanged)
             ->with('editUrl', action('\ShuvroRoy\TranslationManager\Controller@postEdit', [$group]))
             ->with('deleteEnabled', $this->manager->getConfig('delete_enabled'))
+            ->with('modifyEnabled', $modifyEnabled)
             ->with('paginationEnabled', $this->manager->getConfig('pagination_enabled') && !$verified && ! request()->has('search'))
             ->with('order', $order)
             ->with('orderBy', $orderBy)

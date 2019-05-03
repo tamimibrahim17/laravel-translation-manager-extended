@@ -288,7 +288,7 @@
                             <tr id="<?php echo htmlentities($key, ENT_QUOTES, 'UTF-8', false) ?>">
                                 <td>
                                     <?php echo htmlentities($key, ENT_QUOTES, 'UTF-8', false) ?>
-                                    <span><button style="margin-right:3px;" type="button" class="btn btn-xs btn-warning" data-toggle="modal" data-target="#myModalPath<?php echo $i; ?>"><span class="glyphicon glyphicon-road"></span></button></span> <span style="margin-left: 2px;"><?php echo \ShuvroRoy\TranslationManager\Models\Translation::where('locale', config('app.locale'))->where('key', $key)->count(); ?></span>
+                                    <span><button style="margin-right:3px;" type="button" class="btn btn-xs btn-warning" data-toggle="modal" data-target="#myModalPath<?php echo $i; ?>"><span class="glyphicon glyphicon-road"></span></button></span> <span style="margin-left: 2px;"><?php $data = \ShuvroRoy\TranslationManager\Models\Translation::where('locale', config('app.locale'))->where('key', $key)->first()['filepath']; if(is_null($data)) { echo 0;} else { echo count(json_decode($data));}  ?></span>
                                     <!-- Modal -->
                                     <div class="modal fade" id="myModalPath<?php echo $i; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                         <div class="modal-dialog" role="document">

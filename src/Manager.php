@@ -259,6 +259,8 @@ class Manager
             ]);
         }
 
+        session()->put('last_update', now());
+
         // Return the number of found translations
         return count( $groupKeys + $stringKeys );
     }

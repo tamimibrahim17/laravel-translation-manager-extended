@@ -145,12 +145,6 @@
                 </div>
             </div>
         </form>
-        <form class="form-find" method="POST" action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postFind') ?>" data-remote="true" role="form" data-confirm="Are you sure you want to scan you app folder? All found translation keys will be added to the database.">
-            <div class="form-group">
-                <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-                <button type="submit" class="btn btn-info" data-disable-with="Searching.." >Find translations in files</button>
-            </div>
-        </form>
         <?php endif; ?>
         <?php if(isset($group)) : ?>
             <form class="form-inline form-publish" method="POST" action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postPublish', $group) ?>" data-remote="true" role="form" data-confirm="Are you sure you want to publish the translations group '<?php echo $group ?>? This will overwrite existing language files.">
@@ -181,7 +175,16 @@
         </div>
         <?php endif; ?>
     </form>
+    <hr>
     <?php if($group): ?>
+        <form class="form-find" method="POST" action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postFind') ?>" data-remote="true" role="form" data-confirm="Are you sure you want to scan you app folder? All found translation keys will be added to the database.">
+            <div class="form-group">
+                <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+                <button type="submit" class="btn btn-info" data-disable-with="Searching.." >Update translations in files</button>
+                <span>Last Update: <?php echo session('last_update'); ?></span>
+            </div>
+        </form>
+        <hr>
         <?php if($modifyEnabled) : ?>
         <form action="<?php echo action('\ShuvroRoy\TranslationManager\Controller@postAdd', array($group)) ?>" method="POST"  role="form">
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">

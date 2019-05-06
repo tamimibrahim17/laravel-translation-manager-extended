@@ -303,7 +303,7 @@
                                             <div class="modal-body">
                                                 <?php $tra = \ShuvroRoy\TranslationManager\Models\Translation::where('locale', config('app.locale'))->where('key', $key)->first(); ?>
                                                 <?php if(is_null(json_decode($tra['filepath']))): ?>
-                                                    No file path found!
+                                                    <p>No file path found!</p>
                                                 <?php else: ?>
                                                 <ul>
                                                     <?php foreach(json_decode($tra['filepath']) as $path) : ?>

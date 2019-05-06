@@ -11,6 +11,14 @@ The workflow would be:
     - Optionally: Listen to missing translation with the custom Translator
     - Translate all keys through the webinterface
     - Export: Write all translations back to the translation files.
+    - Approval option added.
+    - Unapproved tab added.
+    - Pagination option added.
+    - Storing every file path where this key is used.
+    - Add Search functionility.
+    - Individual tab for each lang that only show the empty one.
+    - Store previous 5 logs.
+    - Store last update find key in session
 
 This way, translations can be saved in git history and no overhead is introduced in production.
 
@@ -55,32 +63,7 @@ Edit config/laravel_google_translate.php and add your Google Translate API key.
 php artisan config:cache
 ```
 
- Now you can use Auto Translation Trait
-
-### Laravel >= 5.2
-
-The configuration file by default only includes the `auth` middleware, but the latests changes in Laravel 5.2 makes it that session variables are only accessible when your route includes the `web` middleware. In order to make this package work on Laravel 5.2, you will have to change the route/middleware setting from the default 
-
-```
-    'route' => [
-        'prefix' => 'translations',
-        'middleware' => 'auth',
-    ],
-```
-
-to
-
-```
-    'route' => [
-        'prefix' => 'translations',
-        'middleware' => [
-	        'web',
-	        'auth',
-		],
-    ],
-```
-
-**NOTE:** *This is only needed in Laravel 5.2 (and up!)*
+Now you can use Auto Translation Trait
 
 ## Usage
 
@@ -153,12 +136,3 @@ In your `config/app.php`, comment out the original TranslationServiceProvider an
 This will extend the Translator and will create a new database entry, whenever a key is not found, so you have to visit the pages that use them.
 This way it shows up in the webinterface and can be edited and later exported.
 You shouldn't use this in production, just in development to translate your views, then just switch back.
-
-## TODO
-
-This package is still very alpha. Few things that are on the todo-list:
-
-    - Add locales/groups via webinterface
-    - Improve webinterface (more selection/filtering, behavior of popup after save etc)
-    - Seed existing languages (https://github.com/caouecs/Laravel-lang)
-    - Suggestions are welcome :)

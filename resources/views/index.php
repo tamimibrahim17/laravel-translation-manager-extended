@@ -306,8 +306,8 @@
                                                     No file path found!
                                                 <?php else: ?>
                                                 <ul>
-                                                    <?php foreach(json_decode($tra['filepath']) as $path) : ?>                                          
-                                                        <li><h4><?php echo $path; ?></h4></li>
+                                                    <?php foreach(json_decode($tra['filepath']) as $path) : ?>
+                                                        <li><?php echo $path; ?></li>
                                                     <?php endforeach; ?>
                                                 </ul>
                                                 <?php endif; ?>

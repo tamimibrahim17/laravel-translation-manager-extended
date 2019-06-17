@@ -1,5 +1,9 @@
 ## Laravel 5 Translation Manager
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/vpre/shuvroroy/laravel-translation-manager.svg?style=flat-square)](https://packagist.org/packages/shuvroroy/laravel-translation-manager)
+[![Issues](https://img.shields.io/github/issues/shuvroroy/laravel-translation-manager-extended.svg?style=flat-square)](https://github.com/shuvroroy/laravel-translation-manager/issues)
+[![Total Downloads](https://img.shields.io/packagist/dt/shuvroroy/laravel-translation-manager.svg?style=flat-square)](https://packagist.org/packages/shuvroroy/laravel-translation-manager)
+
 This is a package to manage Laravel translation files.
 It does not replace the Translation system, only import/export the php files to a database and make them editable through a webinterface.
 The workflow would be:
